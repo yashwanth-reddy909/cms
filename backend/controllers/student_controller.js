@@ -170,6 +170,37 @@ const updateExamResult = async (req, res) => {
     }
 };
 
+const updateQuestionResult = async (req, res) => {
+    try {
+        const student = await Student.findById(req.params.id);
+        if (!student) {
+            return res.send({ message: 'Student not found' });
+        }
+
+        console.log(req.body);
+        const subject = await Subject.findById(req.body.subName);
+        if (!subject) {
+            return res.send({ message: 'Subject not found' });
+        }
+
+        const existingResult = student.questionResult.find(
+            (result) => result.subName.toString() === subject.subName
+        );
+
+        if (existingResult) {
+            res.send({ message: 'Result already exists' });
+        } else {
+            student.questionResult.push({ subName: subject._id, result: [req.body.result] });
+        }
+
+        const result = await student.save();
+        return res.send(result);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json(error);
+    }
+}
+
 const studentAttendance = async (req, res) => {
     const { subName, status, date } = req.body;
 
@@ -288,4 +319,5 @@ module.exports = {
     clearAllStudentsAttendance,
     removeStudentAttendanceBySubject,
     removeStudentAttendance,
+    updateQuestionResult,
 };
