@@ -51,7 +51,7 @@ router.put("/Student/:id", updateStudent)
 
 router.put('/UpdateExamResult/:id', updateExamResult)
 
-router.post('/Student/:id/UpdateQuestionResult', updateQuestionResult)
+router.put('/UpdateQuestionResult/:id', updateQuestionResult)
 
 router.put('/StudentAttendance/:id', studentAttendance)
 
