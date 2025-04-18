@@ -57,7 +57,7 @@ const TeacherClassDetails = () => {
   });
 
   const StudentsButtonHaver = ({ row }) => {
-    const options = ["Take Attendance", "Provide Marks"];
+    const options = ["Take Attendance", "Review Question Result"];
 
     const [open, setOpen] = React.useState(false);
     const anchorRef = React.useRef(null);
@@ -76,7 +76,9 @@ const TeacherClassDetails = () => {
       navigate(`/Teacher/class/student/attendance/${row.id}/${subjectID}`);
     };
     const handleMarks = () => {
-      navigate(`/Teacher/class/student/marks/${row.id}/${subjectID}`);
+      navigate(
+        `/Teacher/class/student/reviewQuestionResult/${row.id}/${subjectID}`
+      );
     };
 
     const handleMenuItemClick = (event, index) => {

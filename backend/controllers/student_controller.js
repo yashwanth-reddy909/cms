@@ -188,13 +188,14 @@ const updateQuestionResult = async (req, res) => {
         );
 
         if (existingResult) {
-            res.send({ message: 'Result already exists' });
+            existingResult.result = req.body.result;
         } else {
-            return student.questionResult.push({ subName: subject._id, result: req.body.result });
+            student.questionResult.push({ subName: subject._id, result: req.body.result });
         }
 
         const result = await student.save();
         return res.send(result);
+
     } catch (error) {
         console.log(error);
         res.status(500).json(error);
