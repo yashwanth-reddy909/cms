@@ -32,6 +32,25 @@ const subjectCreate = async (req, res) => {
     }
 };
 
+const createSubjectExam = async (req, res) => {
+    try {
+        const subject = await Subject.findById(req.params.id);
+        if (!subject) {
+            return res.status(404).json({ message: "Subject not found" });
+        }
+
+        if (subject.questions.length >= 1) {
+            return res.status(400).json({ message: "Exam already exists" });
+        }
+
+        subject.questions = req.body.questions;
+        await subject.save();
+        res.send(subject);
+    } catch (err) {
+        res.status(500).json(err);
+    }
+}
+
 const allSubjects = async (req, res) => {
     try {
         let subjects = await Subject.find({ school: req.params.id })
@@ -161,4 +180,4 @@ const deleteSubjectsByClass = async (req, res) => {
 };
 
 
-module.exports = { subjectCreate, freeSubjectList, classSubjects, getSubjectDetail, deleteSubjectsByClass, deleteSubjects, deleteSubject, allSubjects };
+module.exports = { subjectCreate, freeSubjectList, classSubjects, getSubjectDetail, deleteSubjectsByClass, deleteSubjects, deleteSubject, allSubjects, createSubjectExam };

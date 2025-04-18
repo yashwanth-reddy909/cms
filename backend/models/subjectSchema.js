@@ -25,6 +25,10 @@ const subjectSchema = new mongoose.Schema({
     teacher: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'teacher',
+    },
+    questions: {
+        type: [String],
+        default: [],
     }
 }, { timestamps: true });
 
