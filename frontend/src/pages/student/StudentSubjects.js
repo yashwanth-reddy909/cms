@@ -1,14 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getSubjectList } from "../../redux/sclassRelated/sclassHandle";
+import {
+  getClassDetails,
+  getSubjectList,
+} from "../../redux/sclassRelated/sclassHandle";
 import {
   BottomNavigation,
   BottomNavigationAction,
   Container,
   Paper,
+  Stack,
   Table,
   TableBody,
   TableHead,
+  TextField,
   Typography,
 } from "@mui/material";
 import { getUserDetails } from "../../redux/userRelated/userHandle";
@@ -19,6 +24,11 @@ import InsertChartOutlinedIcon from "@mui/icons-material/InsertChartOutlined";
 import TableChartIcon from "@mui/icons-material/TableChart";
 import TableChartOutlinedIcon from "@mui/icons-material/TableChartOutlined";
 import { StyledTableCell, StyledTableRow } from "../../components/styles";
+import { PurpleButton } from "../../components/buttonStyles";
+import {
+  updateQuestionResult,
+  updateStudentFields,
+} from "../../redux/studentRelated/studentHandle";
 
 const StudentSubjects = () => {
   const dispatch = useDispatch();
@@ -29,6 +39,7 @@ const StudentSubjects = () => {
 
   useEffect(() => {
     dispatch(getUserDetails(currentUser._id, "Student"));
+    dispatch(getClassDetails("", "Sclass"));
   }, [dispatch, currentUser._id]);
 
   if (response) {
@@ -91,7 +102,11 @@ const StudentSubjects = () => {
     return <CustomBarChart chartData={subjectMarks} dataKey="marksObtained" />;
   };
 
-  const renderClassDetailsSection = () => {
+  const RenderClassDetailsSection = () => {
+    const [takeTest, setTakeTest] = useState([]);
+    const [answers, setAnswers] = useState([]);
+    const [currentTest, setCurrentTest] = useState(null);
+
     return (
       <Container>
         <Typography variant="h4" align="center" gutterBottom>
@@ -105,11 +120,108 @@ const StudentSubjects = () => {
         </Typography>
         {subjectsList &&
           subjectsList.map((subject, index) => (
-            <div key={index}>
+            <Stack
+              key={index}
+              direction={currentTest === subject._id ? "column" : "row"}
+              spacing={2}
+            >
               <Typography variant="subtitle1">
                 {subject.subName} ({subject.subCode})
               </Typography>
-            </div>
+              {!userDetails.questionResult.find(
+                (obj) => obj.subName === subject._id
+              ) && (
+                <Stack
+                  direction={currentTest === subject._id ? "column" : "row"}
+                >
+                  {subject.questions &&
+                    subject.questions.length > 0 &&
+                    !takeTest.includes(subject._id) && (
+                      <div>
+                        <PurpleButton
+                          variant="contained"
+                          onClick={() => {
+                            setTakeTest((prev) => [...prev, subject._id]);
+                            setCurrentTest(subject._id);
+                            setAnswers(
+                              Array.from({
+                                length: subject.questions.length,
+                              }).fill("")
+                            );
+                          }}
+                        >
+                          Take Test
+                        </PurpleButton>
+                      </div>
+                    )}
+                  <div style={{ width: 500 }}>
+                    {currentTest === subject._id &&
+                      subject.questions &&
+                      subject.questions.length > 0 &&
+                      subject.questions.map((ques, idx) => {
+                        return (
+                          <Stack key={idx} direction={"column"}>
+                            <Typography variant="h6" gutterBottom>
+                              {ques}
+                            </Typography>
+                            <TextField
+                              margin="normal"
+                              required
+                              id={`a-${idx}`}
+                              label={`Answer-${idx + 1}`}
+                              name={`answer-${idx}`}
+                              error={answers[idx].length === 0}
+                              helperText={
+                                answers[idx].length === 0 &&
+                                "Answer is required"
+                              }
+                              onChange={(e) => {
+                                setAnswers((prevAnswers) =>
+                                  prevAnswers.map((a, aIndex) =>
+                                    aIndex === idx ? e.target.value : a
+                                  )
+                                );
+                              }}
+                            />
+                          </Stack>
+                        );
+                      })}
+                    {currentTest === subject._id &&
+                      subject.questions &&
+                      subject.questions.length > 0 && (
+                        <div>
+                          <PurpleButton
+                            variant="contained"
+                            onClick={() => {
+                              const result = subject.questions.map(
+                                (ques, idx) => ({
+                                  question: ques,
+                                  answer: answers[idx],
+                                })
+                              );
+                              dispatch(
+                                updateStudentFields(
+                                  userDetails._id,
+                                  {
+                                    subName: subject._id,
+                                    result,
+                                  },
+                                  "UpdateQuestionResult"
+                                )
+                              );
+                              dispatch(
+                                getUserDetails(userDetails._id, "Student")
+                              );
+                            }}
+                          >
+                            Submit
+                          </PurpleButton>
+                        </div>
+                      )}
+                  </div>
+                </Stack>
+              )}
+            </Stack>
           ))}
       </Container>
     );
@@ -163,7 +275,7 @@ const StudentSubjects = () => {
               </Paper>
             </>
           ) : (
-            <>{renderClassDetailsSection()}</>
+            <RenderClassDetailsSection />
           )}
         </div>
       )}

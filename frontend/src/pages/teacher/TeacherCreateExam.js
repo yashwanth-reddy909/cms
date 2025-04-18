@@ -65,7 +65,7 @@ export default function TeacherCreateExam() {
             </div>
           );
         })}
-      {questions.length != 0 && (
+      {questions.length !== 0 && (
         <div>
           <PurpleButton
             variant="contained"
