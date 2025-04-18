@@ -184,13 +184,13 @@ const updateQuestionResult = async (req, res) => {
         }
 
         const existingResult = student.questionResult.find(
-            (result) => result.subName.toString() === subject.subName
+            (result) => result.subName.toString() === subject._id.toString()
         );
 
         if (existingResult) {
             res.send({ message: 'Result already exists' });
         } else {
-            student.questionResult.push({ subName: subject._id, result: [req.body.result] });
+            return student.questionResult.push({ subName: subject._id, result: req.body.result });
         }
 
         const result = await student.save();
