@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 const Student = require('../models/studentSchema.js');
 const Subject = require('../models/subjectSchema.js');
+const Notification = require('../models/notification.js');
 
 const studentRegister = async (req, res) => {
     try {
@@ -233,6 +234,29 @@ const studentAttendance = async (req, res) => {
             }
 
             student.attendance.push({ date, status, subName });
+
+            console.log(attendedSessions, subject.sessions);
+            // Check if this was the last session
+            if (attendedSessions + 1 == subject.sessions) {
+                console.log("Last session");
+                // Calculate attendance percentage
+                const totalSessions = subject.sessions;
+                const presentSessions = student.attendance.filter(
+                    (a) => a.subName.toString() === subName && a.status === 'Present'
+                ).length;
+                const attendancePercentage = (presentSessions / totalSessions) * 100;
+
+                // Create notification
+                const notification = new Notification({
+                    title: 'Attendance Completion',
+                    details: `You have completed all ${totalSessions} sessions for ${subject.subName}. Your attendance percentage is ${attendancePercentage.toFixed(2)}%.`,
+                    date: new Date(),
+                    studentId: student._id,
+                    read: false
+                });
+
+                await notification.save();
+            }
         }
 
         const result = await student.save();

@@ -6,6 +6,7 @@ import CustomPieChart from '../../components/CustomPieChart';
 import { getUserDetails } from '../../redux/userRelated/userHandle';
 import styled from 'styled-components';
 import SeeNotice from '../../components/SeeNotice';
+import SeeNotification from '../../components/SeeNotification';
 import CountUp from 'react-countup';
 import Subject from "../../assets/subjects.svg";
 import Assignment from "../../assets/assignment.svg";
@@ -54,7 +55,7 @@ const StudentHomePage = () => {
                             <Data start={0} end={numberOfSubjects} duration={2.5} />
                         </StyledPaper>
                     </Grid>
-                    <Grid item xs={12} md={3} lg={3}>
+                    {/* <Grid item xs={12} md={3} lg={3}>
                         <StyledPaper>
                             <img src={Assignment} alt="Assignments" />
                             <Title>
@@ -62,7 +63,7 @@ const StudentHomePage = () => {
                             </Title>
                             <Data start={0} end={15} duration={4} />
                         </StyledPaper>
-                    </Grid>
+                    </Grid> */}
                     <Grid item xs={12} md={4} lg={3}>
                         <ChartContainer>
                             {
@@ -94,6 +95,11 @@ const StudentHomePage = () => {
                     <Grid item xs={12}>
                         <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
                             <SeeNotice />
+                        </Paper>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
+                            <SeeNotification />
                         </Paper>
                     </Grid>
                 </Grid>
