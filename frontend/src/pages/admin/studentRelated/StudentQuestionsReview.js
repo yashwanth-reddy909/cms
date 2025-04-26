@@ -7,6 +7,7 @@ import { updateStudentFields } from '../../../redux/studentRelated/studentHandle
 import { Box, Typography, Paper, Divider, CircularProgress, Container, Alert, TextField, Button, Grid } from '@mui/material';
 import { BlueButton } from '../../../components/buttonStyles';
 import Popup from '../../../components/Popup';
+import axios from 'axios';
 
 const StudentQuestionsReview = ({ situation }) => {
     const dispatch = useDispatch();
@@ -22,6 +23,9 @@ const StudentQuestionsReview = ({ situation }) => {
     const [showPopup, setShowPopup] = useState(false);
     const [message, setMessage] = useState("");
     const [loader, setLoader] = useState(false);
+    const [plagiarismResults, setPlagiarismResults] = useState({});
+    const [checkingPlagiarism, setCheckingPlagiarism] = useState(false);
+    const [selectedQuestionIndex, setSelectedQuestionIndex] = useState(null);
 
     useEffect(() => {
         dispatch(getUserDetails(studentID, "Student"));
@@ -99,6 +103,39 @@ const StudentQuestionsReview = ({ situation }) => {
         }
     }, [response, statestatus, error]);
 
+    // Check plagiarism for a specific answer
+    const checkPlagiarism = async (index) => {
+        if (isGraded) {
+            setMessage("Cannot check plagiarism for already graded answers");
+            setShowPopup(true);
+            return;
+        }
+
+        setCheckingPlagiarism(true);
+        setSelectedQuestionIndex(index);
+        
+        try {
+            const answer = studentQuestionResults.result[index].answer;
+            
+            // Call the plagiarism API
+            const response = await axios.post('http://localhost:5000/plagiarism', {
+                text: answer
+            });
+            
+            setPlagiarismResults(prev => ({
+                ...prev,
+                [index]: response.data
+            }));
+            
+        } catch (error) {
+            console.error('Plagiarism check error:', error);
+            setMessage("Error checking for plagiarism: " + (error.response?.data?.error || error.message));
+            setShowPopup(true);
+        } finally {
+            setCheckingPlagiarism(false);
+        }
+    };
+
     return (
         <Container maxWidth="md" sx={{ mt: 4, mb: 4 }}>
             {loading || subloading ? (
@@ -168,21 +205,78 @@ const StudentQuestionsReview = ({ situation }) => {
                                     </Box>
                                     
                                     {!isGraded && (
-                                        <Box sx={{ mt: 2 }}>
-                                            <Typography variant="body2" gutterBottom>
-                                                Grade:
-                                            </Typography>
-                                            <TextField
-                                                type="number"
-                                                label="Marks"
-                                                value={marks[index] || ""}
-                                                onChange={(e) => handleMarkChange(index, e.target.value)}
-                                                InputLabelProps={{
-                                                    shrink: true,
-                                                }}
-                                                sx={{ width: '150px' }}
-                                            />
-                                        </Box>
+                                        <>
+                                            <Box sx={{ mt: 2 }}>
+                                                <Typography variant="body2" gutterBottom>
+                                                    Grade:
+                                                </Typography>
+                                                <TextField
+                                                    type="number"
+                                                    label="Marks"
+                                                    value={marks[index] || ""}
+                                                    onChange={(e) => handleMarkChange(index, e.target.value)}
+                                                    InputLabelProps={{
+                                                        shrink: true,
+                                                    }}
+                                                    sx={{ width: '150px' }}
+                                                />
+                                            </Box>
+                                            
+                                            <Box sx={{ mt: 2 }}>
+                                                <Button 
+                                                    variant="outlined" 
+                                                    color="secondary"
+                                                    onClick={() => checkPlagiarism(index)}
+                                                    disabled={checkingPlagiarism && selectedQuestionIndex === index}
+                                                >
+                                                    {checkingPlagiarism && selectedQuestionIndex === index ? (
+                                                        <CircularProgress size={24} />
+                                                    ) : (
+                                                        "Check for Plagiarism"
+                                                    )}
+                                                </Button>
+                                            </Box>
+                                            
+                                            {plagiarismResults[index] && (
+                                                <Paper sx={{ mt: 2, p: 2, bgcolor: 'background.paper' }}>
+                                                    <Typography variant="subtitle2" gutterBottom>
+                                                        Plagiarism Analysis:
+                                                    </Typography>
+                                                    
+                                                    {plagiarismResults[index].total_matches > 0 ? (
+                                                        <>
+                                                            <Typography variant="body2" color="error" gutterBottom>
+                                                                Found {plagiarismResults[index].total_matches} potential match(es)
+                                                            </Typography>
+                                                            
+                                                            {plagiarismResults[index].results.map((match, matchIndex) => (
+                                                                <Box key={matchIndex} sx={{ mt: 2, p: 2, border: '1px solid #e0e0e0', borderRadius: 1 }}>
+                                                                    <Typography variant="body2" fontWeight="bold">
+                                                                        Similarity: {match.similarity_percentage.toFixed(2)}%
+                                                                    </Typography>
+                                                                    
+                                                                    <Typography variant="body2" sx={{ mt: 1 }}>
+                                                                        <strong>Student:</strong> {match.student_name} (Roll: {match.student_roll})
+                                                                    </Typography>
+                                                                    
+                                                                    <Typography variant="body2" sx={{ mt: 1 }}>
+                                                                        <strong>Question:</strong> {match.question}
+                                                                    </Typography>
+                                                                    
+                                                                    <Typography variant="body2" sx={{ mt: 1 }}>
+                                                                        <strong>Answer:</strong> {match.answer}
+                                                                    </Typography>
+                                                                </Box>
+                                                            ))}
+                                                        </>
+                                                    ) : (
+                                                        <Typography variant="body2" color="success.main">
+                                                            No plagiarism detected.
+                                                        </Typography>
+                                                    )}
+                                                </Paper>
+                                            )}
+                                        </>
                                     )}
                                     
                                     {isGraded && (
