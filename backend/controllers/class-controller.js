@@ -75,7 +75,7 @@ const deleteSclass = async (req, res) => {
     try {
         const deletedClass = await Sclass.findByIdAndDelete(req.params.id);
         if (!deletedClass) {
-            return res.send({ message: "Class not found" });
+            return res.send({ message: "Semester not found" });
         }
         const deletedStudents = await Student.deleteMany({ sclassName: req.params.id });
         const deletedSubjects = await Subject.deleteMany({ sclassName: req.params.id });

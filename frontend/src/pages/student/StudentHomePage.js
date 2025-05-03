@@ -48,9 +48,9 @@ const StudentHomePage = () => {
                 <Grid container spacing={3}>
                     <Grid item xs={12} md={3} lg={3}>
                         <StyledPaper>
-                            <img src={Subject} alt="Subjects" />
+                            <img src={Subject} alt="Courses" />
                             <Title>
-                                Total Subjects
+                                Total Courses
                             </Title>
                             <Data start={0} end={numberOfSubjects} duration={2.5} />
                         </StyledPaper>

@@ -116,7 +116,7 @@ const StudentAttendance = ({ situation }) => {
                                 </Typography>
                                 {currentUser.teachSubject &&
                                     <Typography variant="h4">
-                                        Subject Name: {currentUser.teachSubject?.subName}
+                                        Course Name: {currentUser.teachSubject?.subName}
                                     </Typography>
                                 }
                             </Stack>
@@ -141,7 +141,7 @@ const StudentAttendance = ({ situation }) => {
                                                     ))
                                                     :
                                                     <MenuItem value="Select Subject">
-                                                        Add Subjects For Attendance
+                                                        Add Courses For Attendance
                                                     </MenuItem>
                                                 }
                                             </Select>

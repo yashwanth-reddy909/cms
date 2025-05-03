@@ -150,10 +150,10 @@ const ViewSubject = () => {
           Subject Details
         </Typography>
         <Typography variant="h6" gutterBottom>
-          Subject Name : {subjectDetails && subjectDetails.subName}
+          Course Name : {subjectDetails && subjectDetails.subName}
         </Typography>
         <Typography variant="h6" gutterBottom>
-          Subject Code : {subjectDetails && subjectDetails.subCode}
+          Course Code : {subjectDetails && subjectDetails.subCode}
         </Typography>
         <Typography variant="h6" gutterBottom>
           Subject Sessions : {subjectDetails && subjectDetails.sessions}
@@ -189,7 +189,7 @@ const ViewSubject = () => {
               <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                 <TabList onChange={handleChange} sx={{ position: 'fixed', width: '100%', bgcolor: 'background.paper', zIndex: 1 }}>
                   <Tab label="Details" value="1" />
-                  <Tab label="Students" value="2" />
+                  {/* <Tab label="Students" value="2" /> */}
                 </TabList>
               </Box>
               <Container sx={{ marginTop: "3rem", marginBottom: "4rem" }}>

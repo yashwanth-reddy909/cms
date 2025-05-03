@@ -354,9 +354,9 @@ const ViewStudent = () => {
                         <CustomPieChart data={chartData} />
                     )
                 }
-                <Button variant="contained" sx={styles.styledButton} onClick={deleteHandler}>
+                {/* <Button variant="contained" sx={styles.styledButton} onClick={deleteHandler}>
                     Delete
-                </Button>
+                </Button> */}
                 <br />
                 {/* <Button variant="contained" sx={styles.styledButton} className="show-tab" onClick={() => { setShowTab(!showTab) }}>
                     {
@@ -410,20 +410,20 @@ const ViewStudent = () => {
                             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                                 <TabList onChange={handleChange} sx={{ position: 'fixed', width: '100%', bgcolor: 'background.paper', zIndex: 1 }}>
                                     <Tab label="Details" value="1" />
-                                    <Tab label="Attendance" value="2" />
-                                    <Tab label="Marks" value="3" />
+                                    {/* <Tab label="Attendance" value="2" />
+                                    <Tab label="Marks" value="3" /> */}
                                 </TabList>
                             </Box>
                             <Container sx={{ marginTop: "3rem", marginBottom: "4rem" }}>
                                 <TabPanel value="1">
                                     <StudentDetailsSection />
                                 </TabPanel>
-                                <TabPanel value="2">
+                                {/* <TabPanel value="2">
                                     <StudentAttendanceSection />
                                 </TabPanel>
                                 <TabPanel value="3">
                                     <StudentMarksSection />
-                                </TabPanel>
+                                </TabPanel> */}
                             </Container>
                         </TabContext>
                     </Box>

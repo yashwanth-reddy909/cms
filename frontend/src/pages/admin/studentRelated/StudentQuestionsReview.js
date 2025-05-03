@@ -174,7 +174,7 @@ const StudentQuestionsReview = ({ situation }) => {
                                 Subject: {subjectDetails.subName}
                             </Typography>
                             <Typography variant="body1">
-                                Subject Code: {subjectDetails.subCode}
+                                Course Code: {subjectDetails.subCode}
                             </Typography>
                         </Paper>
                     )}

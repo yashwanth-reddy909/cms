@@ -48,7 +48,7 @@ const ShowClasses = () => {
   }
 
   const sclassColumns = [
-    { id: 'name', label: 'Class Name', minWidth: 170 },
+    { id: 'name', label: 'Semester Name', minWidth: 170 },
   ]
 
   const sclassRows = sclassesList && sclassesList.length > 0 && sclassesList.map((sclass) => {
@@ -60,7 +60,7 @@ const ShowClasses = () => {
 
   const SclassButtonHaver = ({ row }) => {
     const actions = [
-      { icon: <PostAddIcon />, name: 'Add Subjects', action: () => navigate("/Admin/addsubject/" + row.id) },
+      { icon: <PostAddIcon />, name: 'Add Course', action: () => navigate("/Admin/addsubject/" + row.id) },
       { icon: <PersonAddAlt1Icon />, name: 'Add Student', action: () => navigate("/Admin/class/addstudents/" + row.id) },
     ];
     return (
@@ -91,7 +91,7 @@ const ShowClasses = () => {
     return (
       <>
         <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
-          <Tooltip title="Add Students & Subjects">
+          <Tooltip title="Add Students & Course">
             <IconButton
               onClick={handleClick}
               size="small"
@@ -133,7 +133,7 @@ const ShowClasses = () => {
 
   const actions = [
     {
-      icon: <AddCardIcon color="primary" />, name: 'Add New Class',
+      icon: <AddCardIcon color="primary" />, name: 'Add New Semester',
       action: () => navigate("/Admin/addclass")
     },
     {
@@ -151,7 +151,7 @@ const ShowClasses = () => {
           {getresponse ?
             <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginTop: '16px' }}>
               <GreenButton variant="contained" onClick={() => navigate("/Admin/addclass")}>
-                Add Class
+                Add Semester
               </GreenButton>
             </Box>
             :

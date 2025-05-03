@@ -40,7 +40,7 @@ const ChooseSubject = ({ situation }) => {
             <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginTop: '16px' }}>
                 <PurpleButton variant="contained"
                     onClick={() => navigate("/Admin/addsubject/" + classID)}>
-                    Add Subjects
+                    Add Courses
                 </PurpleButton>
             </Box>
         </div>;
@@ -57,7 +57,7 @@ const ChooseSubject = ({ situation }) => {
     return (
         <Paper sx={{ width: '100%', overflow: 'hidden' }}>
             <Typography variant="h6" gutterBottom component="div">
-                Choose a subject
+                Choose a Course
             </Typography>
             <>
                 <TableContainer>
@@ -65,8 +65,8 @@ const ChooseSubject = ({ situation }) => {
                         <TableHead>
                             <StyledTableRow>
                                 <StyledTableCell></StyledTableCell>
-                                <StyledTableCell align="center">Subject Name</StyledTableCell>
-                                <StyledTableCell align="center">Subject Code</StyledTableCell>
+                                <StyledTableCell align="center">Course Name</StyledTableCell>
+                                <StyledTableCell align="center">Course Code</StyledTableCell>
                                 <StyledTableCell align="center">Actions</StyledTableCell>
                             </StyledTableRow>
                         </TableHead>

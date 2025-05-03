@@ -44,7 +44,7 @@ const TeacherDetails = () => {
                     {isSubjectNamePresent ? (
                         <>
                             <Typography variant="h6" gutterBottom>
-                                Subject Name: {teacherDetails?.teachSubject?.subName}
+                                Course Name: {teacherDetails?.teachSubject?.subName}
                             </Typography>
                             <Typography variant="h6" gutterBottom>
                                 Subject Sessions: {teacherDetails?.teachSubject?.sessions}

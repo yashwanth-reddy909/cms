@@ -128,7 +128,7 @@ const StudentSubjects = () => {
             <Box sx={{ mb: 2 }}>
               <Typography variant="h6">{subject.subName}</Typography>
               <Typography variant="body2" color="text.secondary">
-                Subject Code: {subject.subCode}
+                Course Code: {subject.subCode}
               </Typography>
             </Box>
 
@@ -251,7 +251,7 @@ const StudentSubjects = () => {
     <Box>
       <Paper elevation={3} sx={{ p: 3, mb: 3 }}>
         <Typography variant="h5" gutterBottom>
-          Your Subjects
+          Your Courses
         </Typography>
         <Divider sx={{ mb: 2 }} />
         <RenderClassDetailsSection />

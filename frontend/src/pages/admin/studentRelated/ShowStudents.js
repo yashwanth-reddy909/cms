@@ -76,7 +76,8 @@ const ShowStudents = () => {
     });
 
   const StudentButtonHaver = ({ row }) => {
-    const options = ["Take Attendance", "Provide Marks", "Take Test"];
+    const options = ["Take Attendance"];
+    // const options = ["];
 
     const [open, setOpen] = React.useState(false);
     const anchorRef = React.useRef(null);
@@ -116,9 +117,9 @@ const ShowStudents = () => {
     };
     return (
       <>
-        <IconButton onClick={() => deleteHandler(row.id, "Student")}>
+        {/* <IconButton onClick={() => deleteHandler(row.id, "Student")}>
           <PersonRemoveIcon color="error" />
-        </IconButton>
+        </IconButton> */}
         <BlueButton
           variant="contained"
           onClick={() => navigate("/Admin/students/student/" + row.id)}

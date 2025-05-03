@@ -41,8 +41,8 @@ const AddStudent = ({ situation }) => {
     }, [adminID, dispatch]);
 
     const changeHandler = (event) => {
-        if (event.target.value === 'Select Class') {
-            setClassName('Select Class');
+        if (event.target.value === 'Select Semester') {
+            setClassName('Select Semester');
             setSclassName('');
         } else {
             const selectedClass = sclassesList.find(
@@ -103,7 +103,7 @@ const AddStudent = ({ situation }) => {
                                 className="registerInput"
                                 value={className}
                                 onChange={changeHandler} required>
-                                <option value='Select Class'>Select Class</option>
+                                <option value='Select Class'>Select Semester</option>
                                 {sclassesList.map((classItem, index) => (
                                     <option key={index} value={classItem.sclassName}>
                                         {classItem.sclassName}
