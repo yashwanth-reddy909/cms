@@ -2,6 +2,10 @@ const bcrypt = require('bcrypt');
 const Student = require('../models/studentSchema.js');
 const Subject = require('../models/subjectSchema.js');
 const Notification = require('../models/notification.js');
+const multer = require('multer');
+const pdf = require('pdf-parse');
+const docx = require('docx');
+const fs = require('fs');
 
 const studentRegister = async (req, res) => {
     try {
@@ -171,6 +175,36 @@ const updateExamResult = async (req, res) => {
     }
 };
 
+// Configure multer for file upload
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'uploads/');
+    },
+    filename: function (req, file, cb) {
+        cb(null, Date.now() + '-' + file.originalname);
+    }
+});
+
+const upload = multer({
+    storage: storage,
+    fileFilter: function (req, file, cb) {
+        if (file.mimetype === 'text/plain') {
+            cb(null, true);
+        } else {
+            cb(new Error('Invalid file type. Only TXT files are allowed.'));
+        }
+    }
+}).array('files', 10); // Allow up to 10 files
+
+// Function to extract text from txt files
+const extractTextFromFile = async (filePath) => {
+    try {
+        return fs.readFileSync(filePath, 'utf8');
+    } catch (error) {
+        throw new Error('Error reading text file: ' + error.message);
+    }
+};
+
 const updateQuestionResult = async (req, res) => {
     try {
         const student = await Student.findById(req.params.id);
@@ -178,7 +212,6 @@ const updateQuestionResult = async (req, res) => {
             return res.send({ message: 'Student not found' });
         }
 
-        console.log(req.body);
         const subject = await Subject.findById(req.body.subName);
         if (!subject) {
             return res.send({ message: 'Subject not found' });
@@ -201,7 +234,67 @@ const updateQuestionResult = async (req, res) => {
         console.log(error);
         res.status(500).json(error);
     }
-}
+};
+
+const updateQuestionResultWithFile = async (req, res) => {
+    try {
+        upload(req, res, async function(err) {
+            if (err) {
+                return res.status(400).json({ message: err.message });
+            }
+
+            const student = await Student.findById(req.params.id);
+            if (!student) {
+                return res.status(404).json({ message: 'Student not found' });
+            }
+
+            const subject = await Subject.findById(req.body.subName);
+            if (!subject) {
+                return res.status(404).json({ message: 'Subject not found' });
+            }
+
+            let results = [];
+            
+            // If files are uploaded
+            if (req.files && req.files.length > 0) {
+                // Process each file
+                for (let i = 0; i < req.files.length; i++) {
+                    try {
+                        const fileText = await extractTextFromFile(req.files[i].path);
+                        results.push({
+                            question: req.body.questions[i], // Assuming questions array is sent in the same order as files
+                            answer: fileText,
+                            marks: 0
+                        });
+                    } catch (error) {
+                        return res.status(500).json({ message: `Error processing file ${i + 1}: ${error.message}` });
+                    }
+                }
+            } else if (req.body.result) {
+                // Handle text input
+                results = req.body.result;
+            } else {
+                return res.status(400).json({ message: 'No files or text answers provided' });
+            }
+
+            const existingResult = student.questionResult.find(
+                (result) => result.subName.toString() === subject._id.toString()
+            );
+
+            if (existingResult) {
+                existingResult.result = results;
+            } else {
+                student.questionResult.push({ subName: subject._id, result: results });
+            }
+
+            const savedStudent = await student.save();
+            return res.send(savedStudent);
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json(error);
+    }
+};
 
 const studentAttendance = async (req, res) => {
     const { subName, status, date } = req.body;
@@ -345,4 +438,5 @@ module.exports = {
     removeStudentAttendanceBySubject,
     removeStudentAttendance,
     updateQuestionResult,
+    updateQuestionResultWithFile,
 };

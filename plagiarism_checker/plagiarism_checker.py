@@ -9,9 +9,11 @@ class PlagiarismChecker:
     def __init__(self):
         # Initialize MongoDB connection
         mongodb_uri = os.getenv('MONGODB_URI', 'mongodb://localhost:27017/')
+        db_name = os.getenv('DB_NAME', 'newschool')
+        collection_name = os.getenv('COLLECTION_NAME', 'students')
         self.client = MongoClient(mongodb_uri)
-        self.db = self.client['school']  # Replace with your actual database name
-        self.collection = self.db['students']  # Collection containing student data
+        self.db = self.client[db_name]  # Replace with your actual database name
+        self.collection = self.db[collection_name]  # Collection containing student data
 
     def calculate_similarity(self, text1, text2):
         """Calculate similarity ratio between two texts"""
@@ -37,17 +39,17 @@ class PlagiarismChecker:
         for student in students:
             for question_result in student.get('questionResult', []):
                 for result in question_result.get('result', []):
-                    print(result.get('answer'))
-                    similarity = self.calculate_similarity(input_text, result.get('answer'))
-                    if similarity > 50:  # Only include matches above 50%
-                        results.append({
-                            'student_name': student.get('name'),
-                            'student_roll': student.get('rollNum'),
-                            'question': result.get('question'),
-                            'answer': result.get('answer'),
-                            'similarity_percentage': round(similarity, 2)
-                        })
-        
+                    # check if the marks is present and in int format and then check its greater than zero
+                    if result.get('marks') and int(result.get('marks')) > 0:
+                        similarity = self.calculate_similarity(input_text, result.get('answer'))
+                        if similarity > 50:  # Only include matches above 50%
+                            results.append({
+                                'student_name': student.get('name'),
+                                'student_roll': student.get('rollNum'),
+                                'question': result.get('question'),
+                                'answer': result.get('answer'),
+                                'similarity_percentage': round(similarity, 2)
+                            })
         # Sort results by similarity percentage in descending order
         results.sort(key=lambda x: x['similarity_percentage'], reverse=True)
         return results

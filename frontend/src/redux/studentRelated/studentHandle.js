@@ -78,3 +78,32 @@ export const updateQuestionResult = (id, address, data) => async (dispatch) => {
     dispatch(getError(e));
   }
 };
+
+export const updateQuestionResultWithFile = (id, address, data, files) => async (dispatch) => {
+  dispatch(getRequest());
+
+  try {
+    const formData = new FormData();
+    formData.append('subName', data.subName);
+    formData.append('questions', JSON.stringify(data.questions));
+
+    // Append each file to the FormData
+    files.forEach((file) => {
+      formData.append('files', file);
+    });
+
+    const result = await axios.put(
+      `${process.env.REACT_APP_BASE_URL}/${address}/${id}`,
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      }
+    );
+
+    dispatch(getSuccess(result.data));
+  } catch (e) {
+    dispatch(getError(e));
+  }
+};

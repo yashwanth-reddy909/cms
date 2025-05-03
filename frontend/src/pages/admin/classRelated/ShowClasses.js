@@ -137,7 +137,7 @@ const ShowClasses = () => {
       action: () => navigate("/Admin/addclass")
     },
     {
-      icon: <DeleteIcon color="error" />, name: 'Delete All Classes',
+      icon: <DeleteIcon color="error" />, name: 'Delete All Semesters',
       action: () => deleteHandler(adminID, "Sclasses")
     },
   ];

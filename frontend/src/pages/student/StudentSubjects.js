@@ -15,6 +15,12 @@ import {
   TableHead,
   TextField,
   Typography,
+  Box,
+  Divider,
+  CircularProgress,
+  List,
+  ListItem,
+  ListItemText,
 } from "@mui/material";
 import { getUserDetails } from "../../redux/userRelated/userHandle";
 import CustomBarChart from "../../components/CustomBarChart";
@@ -28,6 +34,7 @@ import { PurpleButton } from "../../components/buttonStyles";
 import {
   updateQuestionResult,
   updateStudentFields,
+  updateQuestionResultWithFile,
 } from "../../redux/studentRelated/studentHandle";
 
 const StudentSubjects = () => {
@@ -50,6 +57,9 @@ const StudentSubjects = () => {
 
   const [subjectMarks, setSubjectMarks] = useState([]);
   const [selectedSection, setSelectedSection] = useState("table");
+  const [takeTest, setTakeTest] = useState([]);
+  const [currentTest, setCurrentTest] = useState(null);
+  const [selectedFiles, setSelectedFiles] = useState({});
 
   useEffect(() => {
     if (userDetails) {
@@ -65,6 +75,14 @@ const StudentSubjects = () => {
 
   const handleSectionChange = (event, newSection) => {
     setSelectedSection(newSection);
+  };
+
+  const handleFileChange = (subjectId, questionIndex, event) => {
+    const file = event.target.files[0];
+    setSelectedFiles(prev => ({
+      ...prev,
+      [`${subjectId}-${questionIndex}`]: file
+    }));
   };
 
   const renderTableSection = () => {
@@ -103,183 +121,142 @@ const StudentSubjects = () => {
   };
 
   const RenderClassDetailsSection = () => {
-    const [takeTest, setTakeTest] = useState([]);
-    const [answers, setAnswers] = useState([]);
-    const [currentTest, setCurrentTest] = useState(null);
-
     return (
-      <Container>
-        <Typography variant="h4" align="center" gutterBottom>
-          Class Details
-        </Typography>
-        <Typography variant="h5" gutterBottom>
-          You are currently in Class {userDetails?.sclassName?.sclassName}
-        </Typography>
-        <Typography variant="h6" gutterBottom>
-          And these are the subjects:
-        </Typography>
-        {subjectsList &&
-          subjectsList.map((subject, index) => (
-            <Stack
-              key={index}
-              direction={currentTest === subject._id ? "column" : "row"}
-              spacing={2}
-            >
-              <Typography variant="subtitle1">
-                {subject.subName} ({subject.subCode})
+      <Container maxWidth="md" sx={{ mt: 4, mb: 4 }}>
+        {subjectsList.map((subject, index) => (
+          <Paper key={index} elevation={3} sx={{ p: 3, mb: 3 }}>
+            <Box sx={{ mb: 2 }}>
+              <Typography variant="h6">{subject.subName}</Typography>
+              <Typography variant="body2" color="text.secondary">
+                Subject Code: {subject.subCode}
               </Typography>
-              {!userDetails.questionResult.find(
-                (obj) => obj.subName === subject._id
-              ) && (
-                <Stack
-                  direction={currentTest === subject._id ? "column" : "row"}
-                >
-                  {subject.questions &&
-                    subject.questions.length > 0 &&
-                    !takeTest.includes(subject._id) && (
-                      <div>
-                        <PurpleButton
-                          variant="contained"
-                          onClick={() => {
-                            setTakeTest((prev) => [...prev, subject._id]);
-                            setCurrentTest(subject._id);
-                            setAnswers(
-                              Array.from({
-                                length: subject.questions.length,
-                              }).fill("")
-                            );
-                          }}
-                        >
-                          Take Test
-                        </PurpleButton>
-                      </div>
-                    )}
-                  <div style={{ width: 500 }}>
-                    {currentTest === subject._id &&
-                      subject.questions &&
-                      subject.questions.length > 0 &&
-                      subject.questions.map((ques, idx) => {
-                        return (
-                          <Stack key={idx} direction={"column"}>
-                            <Typography variant="h6" gutterBottom>
-                              {ques}
+            </Box>
+
+            {!userDetails.questionResult.find(
+              (obj) => obj.subName === subject._id
+            ) && (
+              <Stack spacing={2}>
+                {subject.questions &&
+                  subject.questions.length > 0 &&
+                  !takeTest.includes(subject._id) && (
+                    <PurpleButton
+                      variant="contained"
+                      onClick={() => {
+                        setTakeTest((prev) => [...prev, subject._id]);
+                        setCurrentTest(subject._id);
+                      }}
+                    >
+                      Take Test
+                    </PurpleButton>
+                  )}
+
+                {currentTest === subject._id && subject.questions && (
+                  <List>
+                    {subject.questions.map((question, qIndex) => (
+                      <ListItem key={qIndex} sx={{ flexDirection: 'column', alignItems: 'flex-start' }}>
+                        <ListItemText
+                          primary={`Question ${qIndex + 1}`}
+                          secondary={question}
+                          sx={{ mb: 1 }}
+                        />
+                        <Stack direction="row" spacing={2} alignItems="center">
+                          <input
+                            type="file"
+                            accept=".txt"
+                            onChange={(e) => handleFileChange(subject._id, qIndex, e)}
+                            style={{ display: 'none' }}
+                            id={`file-upload-${subject._id}-${qIndex}`}
+                          />
+                          <label htmlFor={`file-upload-${subject._id}-${qIndex}`}>
+                            <PurpleButton
+                              variant="contained"
+                              component="span"
+                              size="small"
+                            >
+                              Upload Answer
+                            </PurpleButton>
+                          </label>
+                          {selectedFiles[`${subject._id}-${qIndex}`] && (
+                            <Typography variant="body2" color="text.secondary">
+                              {selectedFiles[`${subject._id}-${qIndex}`].name}
                             </Typography>
-                            <TextField
-                              margin="normal"
-                              required
-                              id={`a-${idx}`}
-                              label={`Answer-${idx + 1}`}
-                              name={`answer-${idx}`}
-                              error={answers[idx].length === 0}
-                              helperText={
-                                answers[idx].length === 0 &&
-                                "Answer is required"
-                              }
-                              onChange={(e) => {
-                                setAnswers((prevAnswers) =>
-                                  prevAnswers.map((a, aIndex) =>
-                                    aIndex === idx ? e.target.value : a
-                                  )
-                                );
-                              }}
-                            />
-                          </Stack>
-                        );
-                      })}
-                    {currentTest === subject._id &&
-                      subject.questions &&
-                      subject.questions.length > 0 && (
-                        <div>
-                          <PurpleButton
-                            variant="contained"
-                            onClick={() => {
-                              const result = subject.questions.map(
-                                (ques, idx) => ({
-                                  question: ques,
-                                  answer: answers[idx],
-                                })
-                              );
-                              dispatch(
-                                updateStudentFields(
-                                  userDetails._id,
-                                  {
-                                    subName: subject._id,
-                                    result,
-                                  },
-                                  "UpdateQuestionResult"
-                                )
-                              );
-                              dispatch(
-                                getUserDetails(userDetails._id, "Student")
-                              );
-                            }}
-                          >
-                            Submit
-                          </PurpleButton>
-                        </div>
-                      )}
-                  </div>
-                </Stack>
-              )}
-            </Stack>
-          ))}
+                          )}
+                        </Stack>
+                      </ListItem>
+                    ))}
+                    <ListItem>
+                      <PurpleButton
+                        variant="contained"
+                        onClick={() => {
+                          // Check if all questions have files
+                          const allQuestionsAnswered = subject.questions.every((_, qIndex) => 
+                            selectedFiles[`${subject._id}-${qIndex}`]
+                          );
+                          
+                          if (!allQuestionsAnswered) {
+                            alert('Please upload answers for all questions');
+                            return;
+                          }
+
+                          // Collect all files in order
+                          const files = subject.questions.map((_, qIndex) => 
+                            selectedFiles[`${subject._id}-${qIndex}`]
+                          );
+
+                          dispatch(
+                            updateQuestionResultWithFile(
+                              userDetails._id,
+                              "UpdateQuestionResultWithFile",
+                              {
+                                subName: subject._id,
+                                questions: subject.questions
+                              },
+                              files
+                            )
+                          );
+                          dispatch(getUserDetails(userDetails._id, "Student"));
+                          setTakeTest((prev) => prev.filter(id => id !== subject._id));
+                          setCurrentTest(null);
+                          setSelectedFiles(prev => {
+                            const newState = { ...prev };
+                            subject.questions.forEach((_, qIndex) => {
+                              delete newState[`${subject._id}-${qIndex}`];
+                            });
+                            return newState;
+                          });
+                        }}
+                      >
+                        Submit All Answers
+                      </PurpleButton>
+                    </ListItem>
+                  </List>
+                )}
+              </Stack>
+            )}
+          </Paper>
+        ))}
       </Container>
     );
   };
 
-  return (
-    <>
-      {loading ? (
-        <div>Loading...</div>
-      ) : (
-        <div>
-          {subjectMarks &&
-          Array.isArray(subjectMarks) &&
-          subjectMarks.length > 0 ? (
-            <>
-              {selectedSection === "table" && renderTableSection()}
-              {selectedSection === "chart" && renderChartSection()}
+  if (loading) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
 
-              <Paper
-                sx={{ position: "fixed", bottom: 0, left: 0, right: 0 }}
-                elevation={3}
-              >
-                <BottomNavigation
-                  value={selectedSection}
-                  onChange={handleSectionChange}
-                  showLabels
-                >
-                  <BottomNavigationAction
-                    label="Table"
-                    value="table"
-                    icon={
-                      selectedSection === "table" ? (
-                        <TableChartIcon />
-                      ) : (
-                        <TableChartOutlinedIcon />
-                      )
-                    }
-                  />
-                  <BottomNavigationAction
-                    label="Chart"
-                    value="chart"
-                    icon={
-                      selectedSection === "chart" ? (
-                        <InsertChartIcon />
-                      ) : (
-                        <InsertChartOutlinedIcon />
-                      )
-                    }
-                  />
-                </BottomNavigation>
-              </Paper>
-            </>
-          ) : (
-            <RenderClassDetailsSection />
-          )}
-        </div>
-      )}
-    </>
+  return (
+    <Box>
+      <Paper elevation={3} sx={{ p: 3, mb: 3 }}>
+        <Typography variant="h5" gutterBottom>
+          Your Subjects
+        </Typography>
+        <Divider sx={{ mb: 2 }} />
+        <RenderClassDetailsSection />
+      </Paper>
+    </Box>
   );
 };
 
