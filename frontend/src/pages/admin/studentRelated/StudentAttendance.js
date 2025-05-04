@@ -63,6 +63,33 @@ const StudentAttendance = ({ situation }) => {
 
     const submitHandler = (event) => {
         event.preventDefault()
+        
+        // Date validation
+        const selectedDate = new Date(date);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); // Reset time part to compare only dates
+        
+        // Set the minimum allowed date (e.g., start of academic year)
+        const minDate = new Date('2023-08-01'); // Change this to your desired start date
+        
+        if (selectedDate > today) {
+            setMessage("Cannot select future date for attendance");
+            setShowPopup(true);
+            return;
+        }
+        
+        if (selectedDate < minDate) {
+            setMessage(`Attendance can only be marked from ${minDate.toLocaleDateString()}`);
+            setShowPopup(true);
+            return;
+        }
+        
+        if (!date) {
+            setMessage("Please select a date");
+            setShowPopup(true);
+            return;
+        }
+
         setLoader(true)
         dispatch(updateStudentFields(studentID, fields, "StudentAttendance"))
     }

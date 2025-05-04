@@ -75,9 +75,9 @@ const ClassDetails = () => {
     const SubjectsButtonHaver = ({ row }) => {
         return (
             <>
-                <IconButton onClick={() => deleteHandler(row.id, "Subject")}>
+                {/* <IconButton onClick={() => deleteHandler(row.id, "Subject")}>
                     <DeleteIcon color="error" />
-                </IconButton>
+                </IconButton> */}
                 <BlueButton
                     variant="contained"
                     onClick={() => {
@@ -95,10 +95,10 @@ const ClassDetails = () => {
             icon: <PostAddIcon color="primary" />, name: 'Add New Course',
             action: () => navigate("/Admin/addsubject/" + classID)
         },
-        {
-            icon: <DeleteIcon color="error" />, name: 'Delete All Courses',
-            action: () => deleteHandler(classID, "SubjectsClass")
-        }
+        // {
+        //     icon: <DeleteIcon color="error" />, name: 'Delete All Courses',
+        //     action: () => deleteHandler(classID, "SubjectsClass")
+        // }
     ];
 
     const ClassSubjectsSection = () => {
@@ -143,9 +143,9 @@ const ClassDetails = () => {
     const StudentsButtonHaver = ({ row }) => {
         return (
             <>
-                <IconButton onClick={() => deleteHandler(row.id, "Student")}>
+                {/* <IconButton onClick={() => deleteHandler(row.id, "Student")}>
                     <PersonRemoveIcon color="error" />
-                </IconButton>
+                </IconButton> */}
                 <BlueButton
                     variant="contained"
                     onClick={() => navigate("/Admin/students/student/" + row.id)}
@@ -169,10 +169,10 @@ const ClassDetails = () => {
             icon: <PersonAddAlt1Icon color="primary" />, name: 'Add New Student',
             action: () => navigate("/Admin/class/addstudents/" + classID)
         },
-        {
-            icon: <PersonRemoveIcon color="error" />, name: 'Delete All Students',
-            action: () => deleteHandler(classID, "StudentsClass")
-        },
+        // {
+        //     icon: <PersonRemoveIcon color="error" />, name: 'Delete All Students',
+        //     action: () => deleteHandler(classID, "StudentsClass")
+        // },
     ];
 
     const ClassStudentsSection = () => {
@@ -262,7 +262,7 @@ const ClassDetails = () => {
                                     <Tab label="Details" value="1" />
                                     <Tab label="Courses" value="2" />
                                     <Tab label="Students" value="3" />
-                                    <Tab label="Teachers" value="4" />
+                                    {/* <Tab label="Teachers" value="4" /> */}
                                 </TabList>
                             </Box>
                             <Container sx={{ marginTop: "3rem", marginBottom: "4rem" }}>
@@ -275,9 +275,9 @@ const ClassDetails = () => {
                                 <TabPanel value="3">
                                     <ClassStudentsSection />
                                 </TabPanel>
-                                <TabPanel value="4">
+                                {/* <TabPanel value="4">
                                     <ClassTeachersSection />
-                                </TabPanel>
+                                </TabPanel> */}
                             </Container>
                         </TabContext>
                     </Box>

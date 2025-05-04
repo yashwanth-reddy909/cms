@@ -92,11 +92,11 @@ const StudentHomePage = () => {
                             }
                         </ChartContainer>
                     </Grid>
-                    <Grid item xs={12}>
+                    {/* <Grid item xs={12}>
                         <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
                             <SeeNotice />
-                        </Paper>
-                    </Grid>
+                        </Paper> */}
+                    {/* </Grid> */}
                     <Grid item xs={12}>
                         <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
                             <SeeNotification />

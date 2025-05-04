@@ -61,9 +61,9 @@ const ShowSubjects = () => {
     const SubjectsButtonHaver = ({ row }) => {
         return (
             <>
-                <IconButton onClick={() => deleteHandler(row.id, "Subject")}>
+                {/* <IconButton onClick={() => deleteHandler(row.id, "Subject")}>
                     <DeleteIcon color="error" />
-                </IconButton>
+                </IconButton> */}
                 <BlueButton variant="contained"
                     onClick={() => navigate(`/Admin/subjects/subject/${row.sclassID}/${row.id}`)}>
                     View
@@ -77,10 +77,10 @@ const ShowSubjects = () => {
             icon: <PostAddIcon color="primary" />, name: 'Add New Course',
             action: () => navigate("/Admin/subjects/chooseclass")
         },
-        {
-            icon: <DeleteIcon color="error" />, name: 'Delete All Courses',
-            action: () => deleteHandler(currentUser._id, "Subjects")
-        }
+        // {
+        //     icon: <DeleteIcon color="error" />, name: 'Delete All Courses',
+        //     action: () => deleteHandler(currentUser._id, "Subjects")
+        // }
     ];
 
     return (

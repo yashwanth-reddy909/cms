@@ -4,7 +4,7 @@ const Subject = require('../models/subjectSchema.js');
 const Notification = require('../models/notification.js');
 const multer = require('multer');
 const pdf = require('pdf-parse');
-const docx = require('docx');
+const mammoth = require('mammoth');
 const fs = require('fs');
 
 const studentRegister = async (req, res) => {
@@ -188,20 +188,31 @@ const storage = multer.diskStorage({
 const upload = multer({
     storage: storage,
     fileFilter: function (req, file, cb) {
-        if (file.mimetype === 'text/plain') {
+        if (file.mimetype === 'text/plain' || 
+            file.mimetype === 'application/pdf' || 
+            file.mimetype === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
             cb(null, true);
         } else {
-            cb(new Error('Invalid file type. Only TXT files are allowed.'));
+            cb(new Error('Invalid file type. Only TXT, PDF, and DOCX files are allowed.'));
         }
     }
 }).array('files', 10); // Allow up to 10 files
 
-// Function to extract text from txt files
-const extractTextFromFile = async (filePath) => {
+// Function to extract text from files
+const extractTextFromFile = async (filePath, fileType) => {
     try {
-        return fs.readFileSync(filePath, 'utf8');
+        if (fileType === 'text/plain') {
+            return fs.readFileSync(filePath, 'utf8');
+        } else if (fileType === 'application/pdf') {
+            const dataBuffer = fs.readFileSync(filePath);
+            const data = await pdf(dataBuffer);
+            return data.text;
+        } else if (fileType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+            const result = await mammoth.extractRawText({ path: filePath });
+            return result.value;
+        }
     } catch (error) {
-        throw new Error('Error reading text file: ' + error.message);
+        throw new Error(`Error reading ${fileType} file: ${error.message}`);
     }
 };
 
@@ -257,14 +268,21 @@ const updateQuestionResultWithFile = async (req, res) => {
             
             // If files are uploaded
             if (req.files && req.files.length > 0) {
-                // Process each file
+                // Parse questions from the request body
+                const questions = JSON.parse(req.body.questions);
+                
+                // Check if number of files matches number of questions
+                if (req.files.length !== questions.length) {
+                    return res.status(400).json({ message: 'Number of files does not match number of questions' });
+                }
+
+                // Process each file and map to corresponding question
                 for (let i = 0; i < req.files.length; i++) {
                     try {
-                        const fileText = await extractTextFromFile(req.files[i].path);
+                        const fileText = await extractTextFromFile(req.files[i].path, req.files[i].mimetype);
                         results.push({
-                            question: req.body.questions[i], // Assuming questions array is sent in the same order as files
-                            answer: fileText,
-                            marks: 0
+                            question: questions[i],
+                            answer: fileText
                         });
                     } catch (error) {
                         return res.status(500).json({ message: `Error processing file ${i + 1}: ${error.message}` });

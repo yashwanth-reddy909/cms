@@ -40,9 +40,9 @@ class PlagiarismChecker:
             for question_result in student.get('questionResult', []):
                 for result in question_result.get('result', []):
                     # check if the marks is present and in int format and then check its greater than zero
-                    if result.get('marks') and int(result.get('marks')) > 0:
+                    if result.get('marks') and int(result.get('marks')) > -1:
                         similarity = self.calculate_similarity(input_text, result.get('answer'))
-                        if similarity > 50:  # Only include matches above 50%
+                        if similarity > 15:  # Only include matches above 50%
                             results.append({
                                 'student_name': student.get('name'),
                                 'student_roll': student.get('rollNum'),

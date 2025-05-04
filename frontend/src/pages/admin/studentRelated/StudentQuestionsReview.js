@@ -54,7 +54,8 @@ const StudentQuestionsReview = ({ situation }) => {
     // Handle mark change for a specific question
     const handleMarkChange = (index, value) => {
         const newMarks = [...marks];
-        newMarks[index] = value;
+        // Convert the value to integer, default to 0 if empty or invalid
+        newMarks[index] = value === "" ? "" : parseInt(value, 10);
         setMarks(newMarks);
     };
 
@@ -70,10 +71,10 @@ const StudentQuestionsReview = ({ situation }) => {
             return;
         }
         
-        // Prepare the updated result with marks
+        // Prepare the updated result with marks as integers
         const updatedResult = studentQuestionResults.result.map((item, index) => ({
             ...item,
-            marks: marks[index]
+            marks: parseInt(marks[index], 10)
         }));
         
         // Prepare the fields to update

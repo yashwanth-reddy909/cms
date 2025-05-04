@@ -56,7 +56,7 @@ const ShowTeachers = () => {
     };
 
     const columns = [
-        { id: 'name', label: 'Name', minWidth: 170 },
+        { id: 'name', label: 'Professor Name', minWidth: 170 },
         { id: 'teachSubject', label: 'Course', minWidth: 100 },
         { id: 'teachSclass', label: 'Semester', minWidth: 170 },
     ];
@@ -76,10 +76,10 @@ const ShowTeachers = () => {
             icon: <PersonAddAlt1Icon color="primary" />, name: 'Add New Professor',
             action: () => navigate("/Admin/teachers/chooseclass")
         },
-        {
-            icon: <PersonRemoveIcon color="error" />, name: 'Delete All Professors',
-            action: () => deleteHandler(currentUser._id, "Teachers")
-        },
+        // {
+        //     icon: <PersonRemoveIcon color="error" />, name: 'Delete All Professors',
+        //     action: () => deleteHandler(currentUser._id, "Teachers")
+        // },
     ];
 
     return (
@@ -133,9 +133,9 @@ const ShowTeachers = () => {
                                             );
                                         })}
                                         <StyledTableCell align="center">
-                                            <IconButton onClick={() => deleteHandler(row.id, "Teacher")}>
+                                            {/* <IconButton onClick={() => deleteHandler(row.id, "Teacher")}>
                                                 <PersonRemoveIcon color="error" />
-                                            </IconButton>
+                                            </IconButton> */}
                                             <BlueButton variant="contained"
                                                 onClick={() => navigate("/Admin/teachers/teacher/" + row.id)}>
                                                 View

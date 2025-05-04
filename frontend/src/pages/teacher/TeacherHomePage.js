@@ -44,12 +44,12 @@ const TeacherHomePage = () => {
                         <StyledPaper>
                             <img src={Lessons} alt="Lessons" />
                             <Title>
-                                Total Lessons
+                                Total Sessions Planned
                             </Title>
                             <Data start={0} end={numberOfSessions} duration={5} />
                         </StyledPaper>
                     </Grid>
-                    <Grid item xs={12} md={3} lg={3}>
+                    {/* <Grid item xs={12} md={3} lg={3}>
                         <StyledPaper>
                             <img src={Tests} alt="Tests" />
                             <Title>
@@ -65,7 +65,7 @@ const TeacherHomePage = () => {
                                 Total Hours
                             </Title>
                             <Data start={0} end={30} duration={4} suffix="hrs"/>                        </StyledPaper>
-                    </Grid>
+                    </Grid> */}
                     <Grid item xs={12}>
                         <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
                             <SeeNotice />

@@ -162,7 +162,7 @@ const StudentSubjects = () => {
                         <Stack direction="row" spacing={2} alignItems="center">
                           <input
                             type="file"
-                            accept=".txt"
+                            accept=".txt,.docx,.pdf"
                             onChange={(e) => handleFileChange(subject._id, qIndex, e)}
                             style={{ display: 'none' }}
                             id={`file-upload-${subject._id}-${qIndex}`}

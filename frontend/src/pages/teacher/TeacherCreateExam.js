@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { PurpleButton } from "../../components/buttonStyles";
-import { Stack, TextField, Typography } from "@mui/material";
+import { Stack, TextField, Typography, Paper, Box, Divider } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { createExam } from "../../redux/sclassRelated/sclassHandle";
 import { useParams } from "react-router-dom";
@@ -18,11 +18,24 @@ export default function TeacherCreateExam() {
   const subjectID = currentUser.teachSubject?._id;
 
   return classQuestions && classQuestions.length > 0 ? (
-    <Stack direction={"column"}>
-      {classQuestions.map((ques, idx) => (
-        <div key={idx}>{ques}</div>
-      ))}
-    </Stack>
+    <Paper elevation={3} sx={{ p: 3, mb: 3 }}>
+      {/* <Typography variant="h5" gutterBottom>
+        Exam Questions:
+      </Typography> */}
+      {/* <Divider sx={{ mb: 2 }} /> */}
+      <Stack spacing={2}>
+        {classQuestions.map((ques, idx) => (
+          <Box key={idx} sx={{ p: 2, bgcolor: 'background.default', borderRadius: 1 }}>
+            <Typography variant="subtitle1" fontWeight="bold">
+              Question {idx + 1}:
+            </Typography>
+            <Typography variant="body1" sx={{ mt: 1 }}>
+              {ques}
+            </Typography>
+          </Box>
+        ))}
+      </Stack>
+    </Paper>
   ) : (
     <Stack direction={"column"}>
       {questions.length === 0 && (
