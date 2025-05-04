@@ -71,11 +71,11 @@ const AdminHomePage = () => {
                             </Title>
                             <Data start={0} end={23000} duration={2.5} prefix="$" />                        </StyledPaper>
                     </Grid> */}
-                    <Grid item xs={12} md={12} lg={12}>
+                    {/* <Grid item xs={12} md={12} lg={12}>
                         <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
                             <SeeNotice />
                         </Paper>
-                    </Grid>
+                    </Grid> */}
                 </Grid>
             </Container>
         </>

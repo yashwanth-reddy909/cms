@@ -171,7 +171,7 @@ const ViewSubject = () => {
           :
           <GreenButton variant="contained"
             onClick={() => navigate("/Admin/teachers/addteacher/" + subjectDetails._id)}>
-            Add Subject Teacher
+            Add Subject Professor
           </GreenButton>
         }
       </>

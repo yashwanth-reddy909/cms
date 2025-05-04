@@ -357,7 +357,7 @@ const studentAttendance = async (req, res) => {
                 ).length;
                 const attendancePercentage = (presentSessions / totalSessions) * 100;
 
-                // Create notification
+                // Create notification for completion
                 const notification = new Notification({
                     title: 'Attendance Completion',
                     details: `You have completed all ${totalSessions} sessions for ${subject.subName}. Your attendance percentage is ${attendancePercentage.toFixed(2)}%.`,
@@ -367,6 +367,27 @@ const studentAttendance = async (req, res) => {
                 });
 
                 await notification.save();
+            }
+            // Check if half of the sessions are completed
+            else if (attendedSessions + 1 === Math.ceil(subject.sessions / 2)) {
+                console.log("Half sessions completed");
+                // Calculate attendance percentage for half sessions
+                const totalSessions = subject.sessions;
+                const presentSessions = student.attendance.filter(
+                    (a) => a.subName.toString() === subName && a.status === 'Present'
+                ).length;
+                const attendancePercentage = (presentSessions / (attendedSessions + 1)) * 100;
+
+                // Create notification for half completion
+                const halfNotification = new Notification({
+                    title: 'Half Sessions Completed',
+                    details: `You have completed ${attendedSessions + 1} out of ${totalSessions} sessions for ${subject.subName}. Your current attendance percentage is ${attendancePercentage.toFixed(2)}%.`,
+                    date: new Date(),
+                    studentId: student._id,
+                    read: false
+                });
+
+                await halfNotification.save();
             }
         }
 

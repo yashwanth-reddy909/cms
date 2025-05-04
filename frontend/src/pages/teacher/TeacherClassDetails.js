@@ -172,7 +172,7 @@ const TeacherClassDetails = () => {
       ) : (
         <>
           <Typography variant="h4" align="center" gutterBottom>
-            Class Details
+            Semester Details
           </Typography>
           {getresponse ? (
             <>

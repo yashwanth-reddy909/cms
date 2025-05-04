@@ -66,11 +66,11 @@ const TeacherHomePage = () => {
                             </Title>
                             <Data start={0} end={30} duration={4} suffix="hrs"/>                        </StyledPaper>
                     </Grid> */}
-                    <Grid item xs={12}>
+                    {/* <Grid item xs={12}>
                         <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
                             <SeeNotice />
                         </Paper>
-                    </Grid>
+                    </Grid> */}
                 </Grid>
             </Container>
         </>

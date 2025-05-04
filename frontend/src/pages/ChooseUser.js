@@ -119,9 +119,9 @@ const ChooseUser = ({ visitor }) => {
                   <Group fontSize="large" />
                 </Box>
                 <StyledTypography>
-                  Teacher
+                  Professor
                 </StyledTypography>
-                Login as a teacher to create courses, assignments, and track student progress.
+                Login as a professor to create courses, assignments, and track student progress.
               </div>
             </StyledPaper>
           </Grid>
