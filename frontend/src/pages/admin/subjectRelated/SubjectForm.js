@@ -137,7 +137,7 @@ const SubjectForm = () => {
                                         color="primary"
                                         onClick={handleAddSubject}
                                     >
-                                        Add Subject
+                                        Add Course
                                     </Button>
                                 ) : (
                                     <Button

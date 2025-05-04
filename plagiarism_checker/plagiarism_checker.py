@@ -9,7 +9,7 @@ class PlagiarismChecker:
     def __init__(self):
         # Initialize MongoDB connection
         mongodb_uri = os.getenv('MONGODB_URI', 'mongodb://localhost:27017/')
-        db_name = os.getenv('DB_NAME', 'newschool')
+        db_name = os.getenv('DB_NAME', 'school')
         collection_name = os.getenv('COLLECTION_NAME', 'students')
         self.client = MongoClient(mongodb_uri)
         self.db = self.client[db_name]  # Replace with your actual database name
