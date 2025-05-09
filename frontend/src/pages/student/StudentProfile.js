@@ -54,7 +54,7 @@ const StudentProfile = () => {
             </Grid>
           </Grid>
         </StyledPaper>
-        <Card>
+        {/* <Card>
           <CardContent>
             <Typography variant="h6" gutterBottom>
               Personal Information
@@ -92,7 +92,7 @@ const StudentProfile = () => {
               </Grid>
             </Grid>
           </CardContent>
-        </Card>
+        </Card> */}
       </Container>
     </>
   )

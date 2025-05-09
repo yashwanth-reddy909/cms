@@ -231,13 +231,27 @@ const updateQuestionResult = async (req, res) => {
         const existingResult = student.questionResult.find(
             (result) => result.subName.toString() === subject._id.toString()
         );
-
+        
         if (existingResult) {
             existingResult.result = req.body.result;
         } else {
             student.questionResult.push({ subName: subject._id, result: req.body.result });
         }
 
+        // Calculate total marks and create notification
+        const totalMarks = req.body.result.reduce((sum, question) => sum + (question.marks || 0), 0);
+        const totalQuestions = req.body.result.length;
+        
+        // Create notification for question results
+        const notification = new Notification({
+            title: 'Question Results Updated',
+            details: `Your results for ${subject.subName} have been updated. You scored ${totalMarks} marks out of ${totalQuestions} questions.`,
+            date: new Date(),
+            studentId: student._id,
+            read: false
+        });
+
+        await notification.save();
         const result = await student.save();
         return res.send(result);
 
